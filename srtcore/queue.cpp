@@ -1218,9 +1218,7 @@ static string PacketInfo(const CPacket& pkt)
 
 EReadStatus CRcvQueue::worker_RetrieveUnit(ref_t<int32_t> r_id, ref_t<CUnit*> r_unit, sockaddr* addr)
 {
-#ifdef NO_BUSY_WAITING
     m_pTimer->tick();
-#endif
 
     // check waiting list, if new socket, insert it to the list
     while (ifNewEntry())
