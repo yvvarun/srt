@@ -220,7 +220,7 @@ void CTimer::sleepto(uint64_t nexttime)
        else
        {
            timeout.tv_sec = now.tv_sec + 1;
-           timeout.tv_nsec = (now.tv_usec + interval - 1000000) * 1000;
+           timeout.tv_nsec = (now.tv_usec + waiting_interval - 1000000) * 1000;
        }
        THREAD_PAUSED();
        pthread_mutex_lock(&m_TickLock);
