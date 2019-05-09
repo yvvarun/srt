@@ -193,6 +193,8 @@ void CTimer::sleepto(uint64_t nexttime)
    // Use class member such that the method can be interrupted by others
    m_ullSchedTime = nexttime;
 
+   int64_t waiting_interval = WAITING_INTERVAL_IN_USEC;
+
    uint64_t t;
    rdtsc(t);
 
@@ -210,15 +212,15 @@ void CTimer::sleepto(uint64_t nexttime)
        timeval now;
        timespec timeout;
        gettimeofday(&now, 0);
-       if (now.tv_usec < 990000)
+       if (now.tv_usec < 1000000 - waiting_interval)
        {
            timeout.tv_sec = now.tv_sec;
-           timeout.tv_nsec = (now.tv_usec + 10000) * 1000;
+           timeout.tv_nsec = (now.tv_usec + waiting_interval) * 1000;
        }
        else
        {
            timeout.tv_sec = now.tv_sec + 1;
-           timeout.tv_nsec = (now.tv_usec + 10000 - 1000000) * 1000;
+           timeout.tv_nsec = (now.tv_usec + interval - 1000000) * 1000;
        }
        THREAD_PAUSED();
        pthread_mutex_lock(&m_TickLock);
